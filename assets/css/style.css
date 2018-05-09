@@ -1,0 +1,11 @@
+.player1, .player2, .choice, .record, .playerName {
+    font-size: 20pt;
+}
+
+.player1:hover, .player2:hover {
+    background-color: #ccc;
+}
+
+.playerName {
+    color: red;
+}
