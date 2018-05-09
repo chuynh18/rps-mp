@@ -120,6 +120,8 @@ p1Ref.on("value", function(snapshot) {
     p1Draws = p1Obj.draw;
   };
   updateWinLossDisplay();
+  resetGameDisplay();
+  p2Choice = "neutral";
 
 });
 
@@ -135,6 +137,8 @@ p2Ref.on("value", function(snapshot) {
     p2Draws = p2Obj.draw;
   };
   updateWinLossDisplay();
+  resetGameDisplay();
+  p2Choice = "neutral";
 
 });
 
@@ -167,6 +171,7 @@ p2RefPlays.on("value", function(snapshot) {
     // logic to process the game
     if (p2Choice != "neutral" && p1Choice != "neutral") {
       checkWinner();
+      resetGameDisplay();
 
     };
   };
@@ -279,6 +284,7 @@ $(document).on("click", ".player1", function() {
     p1SendPlay(p1Choice);
     if (p2Choice != "neutral" && p1Choice != "neutral") {
       checkWinner();
+      resetGameDisplay();
 
     };
   }
@@ -361,17 +367,21 @@ function checkWinner() {
     else {
       console.log("nothing to see here");
     }
+    p1Choice = "neutral";
+    p2Choice = "neutral";
 
     setTimeout(function() {
       p1Send();
       p2Send();
+      p1SendPlay("neutral");
+      p2SendPlay("neutral");
       updateWinLossDisplay();
     }, 1000);
   };
 };
 
-// write reset game functionality here
-function resetGame() {
+// reset the game display only - nothing sent to firebase
+function resetGameDisplay() {
   setTimeout(function() {
     document.getElementById("player1Choice").textContent = "";
     document.getElementById("player2Choice").textContent = "";
