@@ -24,7 +24,7 @@ Chat was implemented by just using .set() like so:<pre><code>var sendChat = func
 
 Receiving chat messages is accomplished with:<pre><code>chatDB.on("value", function(snapshot) {
   if (snapshot.val()) {
-    var chatLine = $("<div>");
+    var chatLine = $("&lt;div&gt;");
     chatLine.text(snapshot.val().lastMessage);
     $("#chatBox").append(chatLine);
     var chatBox = document.getElementById("chatBox");
