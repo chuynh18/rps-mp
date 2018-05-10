@@ -77,7 +77,7 @@ $(document).on("click", "#chatSubmit", function(event) {
     var msgToSend = playerStatus + " " + player + ": " + chatMsg;
   }
   else if (player > 2) {
-    var msgToSend = playerStatus + " " + player - 2 + ": " + chatMsg;
+    var msgToSend = playerStatus + " " + (player - 2) + ": " + chatMsg;
   };
 
   sendChat(msgToSend);
