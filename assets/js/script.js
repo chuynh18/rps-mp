@@ -57,7 +57,7 @@ chatDB.on("value", function(snapshot) {
     var chatBox = document.getElementById("chatBox");
     chatBox.scrollTop = chatBox.scrollHeight;
   };
-})
+});
 
 // this function sends chat message to firebase
 var sendChat = function(msg) {
@@ -68,11 +68,8 @@ var sendChat = function(msg) {
 
 // this grabs whatever was typed into the chat message box and sends it to Firebase
 $(document).on("click", "#chatSubmit", function(event) {
-        
   event.preventDefault();
-
   var chatMsg = $("#chatMsg").val().trim();
-
   if (player < 3) {
     var msgToSend = playerStatus + " " + player + ": " + chatMsg;
   }
@@ -80,10 +77,8 @@ $(document).on("click", "#chatSubmit", function(event) {
   else if (player > 2) {
     var msgToSend = playerStatus + " " + (player - 2) + ": " + chatMsg;
   };
-
   sendChat(msgToSend);
   $("#chatMsg").val("");
-
 });
 
 // When the client's connection state changes...
@@ -96,7 +91,6 @@ connectedRef.on("value", function(snap) {
     var con = connectionsRef.push(true);
     var conID = connectionsRef.key;
 
-
     // Remove user from the connection list when they disconnect.
     con.onDisconnect().remove();
   };
@@ -107,7 +101,6 @@ connectionsRef.once("value", function(snap) {
   if (snap.val()) {
     data = snap.val();
   };
-
   if (sessionStorage.getItem("player") !== null) {
     player = parseInt(sessionStorage.getItem("player"));
     playerStatus = sessionStorage.getItem("playerStatus");
@@ -151,8 +144,6 @@ connectionsRef.on("value", function(snap) {
   $("#watchers").text(snap.numChildren());
 });
 
-
-
 p1Ref.on("value", function(snapshot) {
   p1Obj = snapshot.val();
   // p1 is authoritative and does not need to take action based on changes to firebase
@@ -173,7 +164,7 @@ p1Ref.on("value", function(snapshot) {
 p2Ref.on("value", function(snapshot) {
   p2Obj = snapshot.val();
   // p1 is authoritative and does not need to take action based on changes to firebase
-  // hence there is no logic for player 1 here
+  // hence, there is no logic for player 1 here
 
   // player 2 is slaved to player 1, so player2 needs to get ALL stats from firebase
   if (player === 2) {
@@ -184,7 +175,6 @@ p2Ref.on("value", function(snapshot) {
   updateWinLossDisplay();
   resetGameDisplay();
   p2Choice = "neutral";
-
 });
 
 // same as above, but for p1's play
@@ -200,7 +190,7 @@ p1RefPlays.on("value", function(snapshot) {
   };
 });
 
-// player 1 must listen for player2 decisions (or else how could p1 run the logic)
+// player 1 must listen for player 2's decisions (or else how could p1 run the logic)
 p2RefPlays.on("value", function(snapshot) {
   p2PlayObj = snapshot.val();
   // p1 is authoritative and does not need to take action based on changes to firebase
@@ -217,12 +207,9 @@ p2RefPlays.on("value", function(snapshot) {
     if (p2Choice != "neutral" && p1Choice != "neutral") {
       checkWinner();
       resetGameDisplay();
-
     };
   };
-
 });
-
 
 // -------------------------------------------------------------- (CRITICAL - BLOCK) --------------------------- //
 
@@ -269,6 +256,7 @@ var updateWinLossDisplay = function() {
 };
 
 // sending to firebase functions
+// Player 1
 var p1Send = function() {
   p1Ref.set({
     win: p1Wins,
@@ -283,6 +271,7 @@ var p1SendPlay = function(hand) {
   });
 };
 
+// Player 2
 var p2Send = function() {
   p2Ref.set({
     win: p2Wins,
@@ -303,36 +292,32 @@ $(document).on("click", ".player1", function() {
   if (player === 1) {
     console.log("click p1");
     p1Choice = $(this).attr("id");
-    p1Choice = p1Choice.substr(0, p1Choice.length - 1)
+    p1Choice = p1Choice.substr(0, p1Choice.length - 1) // convert e.g. "rock1" to "rock"
     if (p1Choice === "rock") {
       document.getElementById("rock1").textContent = "";
       document.getElementById("paper1").textContent = "";
       document.getElementById("scissors1").textContent = "";
       document.getElementById("player1Choice").textContent = "Rock";
-
     }
     else if (p1Choice === "paper") {
       document.getElementById("rock1").textContent = "";
       document.getElementById("paper1").textContent = "";
       document.getElementById("scissors1").textContent = "";
       document.getElementById("player1Choice").textContent = "Paper";
-
     }
     else if (p1Choice === "scissors") {
       document.getElementById("rock1").textContent = "";
       document.getElementById("paper1").textContent = "";
       document.getElementById("scissors1").textContent = "";
       document.getElementById("player1Choice").textContent = "Scissors";
-
     }
     p1SendPlay(p1Choice);
     if (p2Choice != "neutral" && p1Choice != "neutral") {
       checkWinner();
       resetGameDisplay();
-
     };
   }
-  else {console.log("you are not player 1")};
+  else {console.log("you are not player 1")}; // prevent non-player 1 from playing as player 1.  yes, it's a client-side check...
 });
 
 // player 2 can do what player 1 can do
@@ -346,25 +331,22 @@ $(document).on("click", ".player2", function() {
       document.getElementById("paper2").textContent = "";
       document.getElementById("scissors2").textContent = "";
       document.getElementById("player2Choice").textContent = "Rock";
-
     }
     else if (p2Choice === "paper") {
       document.getElementById("rock2").textContent = "";
       document.getElementById("paper2").textContent = "";
       document.getElementById("scissors2").textContent = "";
       document.getElementById("player2Choice").textContent = "Paper";
-
     }
     else if (p2Choice === "scissors") {
       document.getElementById("rock2").textContent = "";
       document.getElementById("paper2").textContent = "";
       document.getElementById("scissors2").textContent = "";
       document.getElementById("player2Choice").textContent = "Scissors";
-
     }
     p2SendPlay(p2Choice);
   }
-  else {console.log("you are not player 2")};
+  else {console.log("you are not player 2")}; // prevent non-player 2 from playing as player 2.  yes, it's a client-side check...
 });
 
 // write RPS logic here
@@ -414,7 +396,7 @@ function checkWinner() {
     }
     else {
       console.log("nothing to see here");
-    }
+    };
     p1Choice = "neutral";
     p2Choice = "neutral";
 
@@ -452,8 +434,6 @@ function resetGameDisplay() {
     p1SendPlay("neutral");
     p2SendPlay("neutral");
   };
-
-
 
 // --------------------------------------- function calls ---------------------------------------
 
