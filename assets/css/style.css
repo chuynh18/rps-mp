@@ -9,3 +9,12 @@
 .playerName {
     color: red;
 }
+
+.active {
+    background-color: lightgreen;
+}
+
+#chatBox {
+    height: 400px;
+    overflow-y: scroll;
+}

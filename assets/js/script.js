@@ -25,7 +25,6 @@ var connectedRef = database.ref(".info/connected");
 
 var data;
 var player;
-var userID;
 var playerStatus;
 
 var p1Ref = database.ref("/1");
@@ -46,6 +45,39 @@ var p2Choice = "neutral";
 var p2Obj;
 var p2PlayObj;
 
+// chat code below
+var chatDB = database.ref("/chat");
+
+// listen for chat messages
+chatDB.on("value", function(snapshot) {
+  if (snapshot.val()) {
+    var chatLine = $("<div>");
+    chatLine.text(snapshot.val().lastMessage);
+    $("#chatBox").append(chatLine);
+    var chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+})
+
+// this function sends chat message to firebase
+var sendChat = function(msg) {
+  chatDB.set({
+    lastMessage: msg
+  });
+};
+
+// this grabs whatever was typed into the chat message box and sends it to Firebase
+$(document).on("click", "#chatSubmit", function(event) {
+        
+  event.preventDefault();
+
+  var chatMsg = $("#chatMsg").val().trim();
+  var msgToSend = playerStatus + " " + player + ": " + chatMsg;
+  sendChat(msgToSend);
+  $("#chatMsg").val("");
+
+});
+
 // When the client's connection state changes...
 connectedRef.on("value", function(snap) {
 
@@ -55,13 +87,11 @@ connectedRef.on("value", function(snap) {
     // Add user to the connections list.
     var con = connectionsRef.push(true);
     var conID = connectionsRef.key;
-    console.log(con.key);
-    userID = con.key;
 
 
     // Remove user from the connection list when they disconnect.
     con.onDisconnect().remove();
-  }
+  };
 });
 
 // assign player slot on connect
@@ -78,7 +108,7 @@ connectionsRef.once("value", function(snap) {
     }
     else if (playerStatus === "spectator") {
       $("#player").text(playerStatus + " " + (player - 2));
-    }
+    };
   }
   else {
     if (Object.keys(data).length < 3) {
@@ -94,7 +124,14 @@ connectionsRef.once("value", function(snap) {
       sessionStorage.setItem("player", player);
       sessionStorage.setItem("playerStatus", playerStatus);
       $("#player").text(playerStatus + " " + (player - 2));
-    }
+    };
+  };
+
+  if (player === 1) {
+    document.getElementById("player1").classList.add("active");
+  }
+  else if (player === 2) {
+    document.getElementById("player2").classList.add("active");
   };
 });
 
@@ -212,7 +249,7 @@ var setupGame = function() {
 };
 
 // updates page with wins and losses based on client-side variables.
-// need to write function to keep client-side in sync with server-side
+// this does not touch firebase at all.  this is purely display
 var updateWinLossDisplay = function() {
   document.getElementById("player1Wins").textContent = p1Wins;
   document.getElementById("player1Losses").textContent = p1Losses;
@@ -224,7 +261,6 @@ var updateWinLossDisplay = function() {
 };
 
 // sending to firebase functions
-
 var p1Send = function() {
   p1Ref.set({
     win: p1Wins,
@@ -376,7 +412,7 @@ function checkWinner() {
       p1SendPlay("neutral");
       p2SendPlay("neutral");
       updateWinLossDisplay();
-    }, 1000);
+    }, 600);
   };
 };
 
@@ -396,7 +432,7 @@ function resetGameDisplay() {
       document.getElementById("scissors2").textContent = "Scissors";
     };
     setupGame();
-  }, 500);};
+  }, 250);};
 
   function initializeFirebase() {
     p1Send();
