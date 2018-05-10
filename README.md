@@ -23,7 +23,7 @@ Chat was implemented by just using .set() like so:
   });
 };</pre></code>
 
-Receiving chat messages is accomplished with <pre><code>on("value")</pre></code>.
+Receiving chat messages is accomplished with <pre><code>on("value")</pre></code>
 
 There is minor non-ideal behavior with this method:  the last line of chat persists and will show up to new users who've just loaded the page, and the same line of chat cannot be repeated by the same player (Firebase won't register this as a change, meaning no updates are broadcasted to the browser, and therefore no new line of chat is shown.)
 
