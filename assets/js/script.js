@@ -335,7 +335,6 @@ $(document).on("click", ".player1", function() {
   else {console.log("you are not player 1")};
 });
 
-
 // player 2 can do what player 1 can do
 $(document).on("click", ".player2", function() {
   if (player === 2) {
