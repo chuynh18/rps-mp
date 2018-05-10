@@ -22,11 +22,15 @@ Chat was implemented by just using .set() like so:<pre><code>var sendChat = func
   });
 };</pre></code>
 
-Receiving chat messages is accomplished with<pre><code>var sendChat = function(msg) {
-  chatDB.set({
-    lastMessage: msg
-  });
-};</pre></code>
+Receiving chat messages is accomplished with:<pre><code>chatDB.on("value", function(snapshot) {
+  if (snapshot.val()) {
+    var chatLine = $("<div>");
+    chatLine.text(snapshot.val().lastMessage);
+    $("#chatBox").append(chatLine);
+    var chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+})</pre></code>
 
 There is minor non-ideal behavior with this method:  the last line of chat persists and will show up to new users who've just loaded the page, and the same line of chat cannot be repeated by the same player (Firebase won't register this as a change, meaning no updates are broadcasted to the browser, and therefore no new line of chat is shown.)
 

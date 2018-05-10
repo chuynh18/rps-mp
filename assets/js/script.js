@@ -76,6 +76,7 @@ $(document).on("click", "#chatSubmit", function(event) {
   if (player < 3) {
     var msgToSend = playerStatus + " " + player + ": " + chatMsg;
   }
+  // spectator chat
   else if (player > 2) {
     var msgToSend = playerStatus + " " + (player - 2) + ": " + chatMsg;
   };
