@@ -1,3 +1,7 @@
+body {
+    background-color: #ccc;
+}
+
 .player1, .player2, .choice, .record, .playerName {
     font-size: 20pt;
 }
@@ -14,11 +18,12 @@
     color: red;
 }
 
-.active {
-    background-color: lightgreen;
-}
-
 #chatBox {
     height: 300px;
     overflow-y: scroll;
+    background-color: #eee;
+}
+
+.active {
+    background-color: lightgreen;
 }
