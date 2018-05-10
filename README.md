@@ -7,8 +7,8 @@ There are a lot of known issues and corner cases, and I'll detail them below.  M
 
 I knew going in that I wanted to make one improvement upon the version of RPS that was demoed to us.  In the demo version, one player would have to make a play first, followed by the other player.  I wanted a version where it did not matter who went first.  I more or less succeeded.
 
-Known issues and caveats
-------------------------
+Known issues, caveats... and regrets
+------------------------------------
 
 I assign player role by checking how many keys there are in the connected players database.  I do this check immediately after the page loads.  If the length of this database is one, then that session is assigned the role of player 1.  If it's two, player 2.  If it's longer, then I assign spectator roles.  However, **SPECTATOR FUNCTIONALITY HAS NOT BEEN IMPLEMENTED**.  It probably won't be, either, as my priority is now the first group project.  However, I believe I know how to implement it.  I don't believe the logic to be complicated; it'll just take some time as I iterate and fix areas that I miss.
 
