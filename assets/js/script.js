@@ -374,38 +374,43 @@ function checkWinner() {
       console.log("draw");
       p1Draws++;
       p2Draws++;
-      // console.log(p1Draws);
-      // console.log(p2Draws);
+      sendChat("[GAME MESSAGE]: It's a draw!");
     }
     else if (p1Choice === "rock" && p2Choice === "scissors") {
       console.log("p1 win");
       p1Wins++;
       p2Losses++;
+      sendChat("[GAME MESSAGE]: Player 1's rock beats Player 2's scissors!");
     }
     else if (p1Choice === "rock" && p2Choice === "paper") {
       console.log("p2 win");
       p1Losses++;
       p2Wins++;
+      sendChat("[GAME MESSAGE]: Player 2's paper beats Player 1's rock!");
     }
     else if (p1Choice === "paper" && p2Choice === "scissors") {
       console.log("p2 win");
       p1Losses++;
       p2Wins++;
+      sendChat("[GAME MESSAGE]: Player 2's scissors beats Player 1's paper!");
     }
     else if (p1Choice === "paper" && p2Choice === "rock") {
       console.log("p1 win");
       p1Wins++;
       p2Losses++;
+      sendChat("[GAME MESSAGE]: Player 1's paper beats Player 2's rock!");
     }
     else if (p1Choice === "scissors" && p2Choice === "rock") {
       console.log("p2 win");
       p1Losses++;
       p2Wins++;
+      sendChat("[GAME MESSAGE]: Player 2's rock beats Player 1's scissors!");
     }
     else if (p1Choice === "scissors" && p2Choice === "paper") {
       console.log("p1 win");
       p1Wins++;
       p2Losses++;
+      sendChat("[GAME MESSAGE]: Player 1's scissors beats Player 2's paper!");
     }
     else {
       console.log("nothing to see here");
