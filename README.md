@@ -17,13 +17,11 @@ Upon deciding to do player assignment in the manner described above, I immediate
 I think that there's also some fragility with this method.  I'm piggybacking on the code that shows the active number of people who have loaded the page.  This logic pushes "true" upon page load and removes that "true" when the page is closed.  However, I do not believe this to be robust in cases where folks have bad connections, nor does it guard against cases where the browser tab or browser itself crashes (and is therefore unable to remove the corresponding "true" from Firebase).
 
 Chat was implemented by just using .set() like so:
-<pre><code>
-var sendChat = function(msg) {
+<pre><code>var sendChat = function(msg) {
   chatDB.set({
     lastMessage: msg
   });
-};
-</pre></code>
+};</pre></code>
 
 Receiving chat messages is accomplished with <pre><code>on("value")</pre></code>.
 
