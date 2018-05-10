@@ -252,7 +252,6 @@ var updateWinLossDisplay = function() {
   document.getElementById("player2Wins").textContent = p2Wins;
   document.getElementById("player2Losses").textContent = p2Losses;
   document.getElementById("player2Draws").textContent = p2Draws;
-
 };
 
 // sending to firebase functions
@@ -285,7 +284,6 @@ var p2SendPlay = function(hand) {
     play: hand
   });
 };
-
 
 // player 1 can make a selection
 $(document).on("click", ".player1", function() {

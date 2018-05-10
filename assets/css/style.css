@@ -2,6 +2,10 @@
     font-size: 20pt;
 }
 
+.choice {
+    background-color: #cccc00;
+}
+
 .player1:hover, .player2:hover {
     background-color: #ccc;
 }
