@@ -1,7 +1,7 @@
 Multiplayer Rocks-Papers-Scissors readme
 ========================================
 
-Hello and welcome to my hastily-written README.md for my hastily-written RPS-MP optional homework assignment.  This is an online-multiplayer rocks-papers-scissors game.
+Hello and welcome to my hastily-written README.md for my hastily-written RPS-MP optional homework assignment.  This repository contains an online multiplayer rocks-papers-scissors game.
 
 There are a lot of known issues and corner cases, and I'll detail them below.  Most of them I knew about as I was writing the JavaScript, but I chose to forge ahead given my limited time and knowledge.  At the end of the day, this assignment does work.  It's not the most robust, but it also isn't the least robust.
 
@@ -26,6 +26,8 @@ Chat was implemented by just using .set() like so:
 Receiving chat messages is accomplished with <pre><code>on("value")</pre></code>.
 
 There is minor non-ideal behavior with this method:  the last line of chat persists and will show up to new users who've just loaded the page, and the same line of chat cannot be repeated by the same player (Firebase won't register this as a change, meaning no updates are broadcasted to the browser, and therefore no new line of chat is shown.)
+
+Oh, and the way we're storing API keys in plaintext in the js file?  And leaving the Firebase db set to public?  Do I even need to call those out as suboptimal?
 
 A little bit about architectural decisions
 ------------------------------------------
