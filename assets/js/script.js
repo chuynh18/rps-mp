@@ -22,6 +22,7 @@ var connectionsRef = database.ref("/connections");
 // the client's connection state changes.
 // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
 var connectedRef = database.ref(".info/connected");
+var assignPlayer = database.ref("/players");
 
 var data;
 var player;
@@ -44,42 +45,6 @@ var p2Draws = 0;
 var p2Choice = "neutral";
 var p2Obj;
 var p2PlayObj;
-
-// chat code below
-var chatDB = database.ref("/chat");
-
-// listen for chat messages
-chatDB.on("value", function(snapshot) {
-  if (snapshot.val()) {
-    var chatLine = $("<div>");
-    chatLine.text(snapshot.val().lastMessage);
-    $("#chatBox").append(chatLine);
-    var chatBox = document.getElementById("chatBox");
-    chatBox.scrollTop = chatBox.scrollHeight;
-  };
-});
-
-// this function sends chat message to firebase
-var sendChat = function(msg) {
-  chatDB.set({
-    lastMessage: msg
-  });
-};
-
-// this grabs whatever was typed into the chat message box and sends it to Firebase
-$(document).on("click", "#chatSubmit", function(event) {
-  event.preventDefault();
-  var chatMsg = $("#chatMsg").val().trim();
-  if (player < 3) {
-    var msgToSend = playerStatus + " " + player + ": " + chatMsg;
-  }
-  // spectator chat
-  else if (player > 2) {
-    var msgToSend = playerStatus + " " + (player - 2) + ": " + chatMsg;
-  };
-  sendChat(msgToSend);
-  $("#chatMsg").val("");
-});
 
 // When the client's connection state changes...
 connectedRef.on("value", function(snap) {
@@ -143,6 +108,44 @@ connectionsRef.on("value", function(snap) {
   // The number of online users is the number of children in the connections list.
   $("#watchers").text(snap.numChildren());
 });
+// chat code below
+var chatDB = database.ref("/chat");
+
+// listen for chat messages
+chatDB.on("value", function(snapshot) {
+  if (snapshot.val()) {
+    var chatLine = $("<div>");
+    chatLine.text(snapshot.val().lastMessage);
+    $("#chatBox").append(chatLine);
+    var chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+});
+
+// this function sends chat message to firebase
+var sendChat = function(msg) {
+  chatDB.set({
+    lastMessage: msg
+  });
+};
+
+// this grabs whatever was typed into the chat message box and sends it to Firebase
+$(document).on("click", "#chatSubmit", function(event) {
+  event.preventDefault();
+  var chatMsg = $("#chatMsg").val().trim();
+  if (player < 3) {
+    var msgToSend = playerStatus + " " + player + ": " + chatMsg;
+  }
+  // spectator chat
+  else if (player > 2) {
+    var msgToSend = playerStatus + " " + (player - 2) + ": " + chatMsg;
+  };
+  sendChat(msgToSend);
+  $("#chatMsg").val("");
+});
+
+// makes it so the next lobby won't see a stray line of chat
+chatDB.onDisconnect().set({});
 
 p1Ref.on("value", function(snapshot) {
   p1Obj = snapshot.val();
@@ -150,7 +153,8 @@ p1Ref.on("value", function(snapshot) {
   // hence there is no logic for player 1 here
 
   // player 2 is slaved to player 1, so player2 needs to get ALL stats from firebase
-  if (player === 2) {
+  // this also updates spectators' displays
+  if (player >= 2) {
     p1Wins = p1Obj.win;
     p1Losses = p1Obj.loss;
     p1Draws = p1Obj.draw;
@@ -167,7 +171,8 @@ p2Ref.on("value", function(snapshot) {
   // hence, there is no logic for player 1 here
 
   // player 2 is slaved to player 1, so player2 needs to get ALL stats from firebase
-  if (player === 2) {
+  // this also updates spectators' displays
+  if (player >= 2) {
     p2Wins = p2Obj.win;
     p2Losses = p2Obj.loss;
     p2Draws = p2Obj.draw;
@@ -181,11 +186,16 @@ p2Ref.on("value", function(snapshot) {
 p1RefPlays.on("value", function(snapshot) {
   p1PlayObj = snapshot.val();
 
-  // player 2 is slaved to player 1, so player2 needs to update from firebase
-  if (player === 2) {
+  // player 2 is slaved to player 1, so player2 needs to update from Firebase
+  if (player >= 2) {
     p1Choice = p1PlayObj.play;
-    if (p1Choice != "neutral") {
+    // logic for player 2
+    if (player === 2 && p1Choice != "neutral") {
       document.getElementById("player1Choice").textContent = "P1 has made a move!";
+    }
+    // logic for spectators
+    else if (player > 2 && p1Choice != "neutral") {
+      document.getElementById("player1Choice").textContent = p1PlayObj.play;
     };
   };
 });
@@ -195,16 +205,20 @@ p2RefPlays.on("value", function(snapshot) {
   p2PlayObj = snapshot.val();
   // p1 is authoritative and does not need to take action based on changes to firebase
   // hence there is no logic for player 1 here
-  if (player === 1) {
+
+  if (player === 1 || player > 2) {
     p2Choice = p2PlayObj.play;
 
     // player 1 also needs to know when player 2 has moved in order to trigger the logic
-    if (p2Choice != "neutral") {
+    if (player === 1 && p2Choice != "neutral") {
       document.getElementById("player2Choice").textContent = "P2 has made a move!";
-    };
-
+    }
+    // spectators get to see player 2's decisions
+    else if (player > 2 && p2Choice != "neutral") {
+      document.getElementById("player2Choice").textContent = p2PlayObj.play;
+    }
     // logic to process the game
-    if (p2Choice != "neutral" && p1Choice != "neutral") {
+    if (player === 1 && p2Choice != "neutral" && p1Choice != "neutral") {
       checkWinner();
       resetGameDisplay();
     };
