@@ -10,7 +10,7 @@ I knew going in that I wanted to make one improvement upon the version of RPS th
 Known issues, caveats... and regrets
 ------------------------------------
 
-I assign player role by checking how many keys there are in the connected players database.  I do this check immediately after the page loads.  If the length of this database is one, then that session is assigned the role of player 1.  If it's two, player 2.  If it's longer, then I assign spectator roles.  However, **SPECTATOR FUNCTIONALITY HAS NOT BEEN IMPLEMENTED**.  It probably won't be, either, as my priority is now the first group project.  However, I believe I know how to implement it.  I don't believe the logic to be complicated; it'll just take some time as I iterate and fix areas that I miss.
+I assign player role by checking how many keys there are in the connected players database.  I do this check immediately after the page loads.  If the length of this database is one, then that session is assigned the role of player 1.  If it's two, player 2.  If it's longer, then I assign spectator roles.  Spectators are not able to play, but can see both Player 1's and Player 2's choices.
 
 Upon deciding to do player assignment in the manner described above, I immediately realized an edge case before writing a single line of code.  If player 1 and player 2 join, then player 1 refreshes the page, there will be two player 2s.  I partially solved this by using session storage.  My logic first checks session storage to see if the player has been assigned a role.  If so, then the browser will assume that role.  Otherwise, it'll proceed with the logic described in the paragraph above this one.  There is an edge case with this behavior:  if Player 1 leaves the page, nobody else can become player 1 until every single player closes out of the page first.  I don't really have ideas for fixes yet, but it is something I'll think about in the back of my mind from time to time.
 
@@ -32,7 +32,7 @@ Receiving chat messages is accomplished with:<pre><code>chatDB.on("value", funct
   };
 })</pre></code>
 
-There is minor non-ideal behavior with this method:  the last line of chat persists and will show up to new users who've just loaded the page, and the same line of chat cannot be repeated by the same player (Firebase won't register this as a change, meaning no updates are broadcasted to the browser, and therefore no new line of chat is shown.)
+Unfortunately, the same line of chat cannot be repeated by the same player (Firebase won't register this as a change, meaning no updates are broadcasted to the browser, and therefore no new line of chat is shown.)
 
 Oh, and the way we're storing API keys in plaintext in the js file?  And leaving the Firebase db set to public?  Do I even need to call those out as suboptimal?
 
