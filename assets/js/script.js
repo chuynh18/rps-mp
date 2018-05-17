@@ -107,6 +107,14 @@ connectionsRef.on("value", function(snap) {
   // Display the viewer count in the html.
   // The number of online users is the number of children in the connections list.
   $("#watchers").text(snap.numChildren());
+
+  // love English
+  if (snap.numChildren() === 1) {
+    $("#watchersGrammar").text("person is");
+  }
+  else {
+    $("#watchersGrammar").text("people are");
+  };
 });
 // chat code below
 var chatDB = database.ref("/chat");

@@ -27,3 +27,14 @@ body {
 .active {
     background-color: lightgreen;
 }
+
+form {
+    margin: auto;
+    width: 100%;
+}
+
+#chatMsg {
+    display: inline-block;
+    margin: auto;
+    width: 80%;
+}
